@@ -55,7 +55,7 @@ pub fn display_cpu() {
 pub fn display_ram_usage() {
     let (total, used, percentage) = platform::get_ram_usage();
     println!(
-        "{} {}GB / {}GB ({} used)",
+        "{} {} / {} ({} used)",
         "RAM:".bold(),
         used,
         total,
@@ -66,7 +66,7 @@ pub fn display_ram_usage() {
 pub fn display_swap_usage(){
     let (total, used, percentage) = platform::get_swap_usage();
     println!(
-        "{} {}GB / {}GB ({} used)",
+        "{} {} / {} ({} used)",
         "Swap:".bold(),
         used,
         total,
