@@ -9,31 +9,33 @@ pub fn get_trimmed(path: &Path) -> String {
     content.trim().to_string() // Remove any whitespace or \n using .trim()
 }
 
-/// Gets content from a multiple or single line file and returns the value from the key and separator provided.
+/// Converts KiB figures into GB, MB or unchanged based on its size.
+/// Returns a formatted String based on the conversion that has happened
 ///
-/// Example:
-///``` ignore
-/// /* /etc/os-release contains: */ PRETTY_NAME = "Arch Linux"
-/// get_value_from_file(Path::new("/etc/os-release"), "PRETTY_NAME", "=");
-/// ```
-/// returns: Arch Linux
-pub fn get_value_from_file(path: &Path, key: &str, separator: &str) -> String {
-    let content = fs::read_to_string(path).unwrap_or(String::from("Null"));
-    for line in content.lines() {
-        if !(line.contains(key)) {
-            continue;
-        }
-        if let Some((_, value)) = line.split_once(separator) {
-            let trimmed = value.trim();
-            if trimmed.starts_with("\"") && trimmed.ends_with("\"") && trimmed.len() > 1 {
-                let mut chars = value.chars(); // Transform the string to chars to enable index-based modifications
-                chars.next(); // Removes the first character in the string, in this case the first character will always be quotation marks
-                chars.next_back(); // Removes the last character, same as before
-                return chars.as_str().to_string();
-            } else {
-                return trimmed.to_string();
-            }
-        }
+/// For example: 14_648.4 KiB will return "15 MB"
+pub fn convert_to_bytes(memory_kib: f64) -> String {
+    if memory_kib >= (1024.0 * 1024.0) {
+        // If memory is more than 1GB, transform it to GB
+        // 1 GB = (1024 * 1024) KiB
+        let memory_gb = round_to_two_decimal(memory_kib / (1024.0 * 1024.0));
+        format!("{} GB", memory_gb)
+    } else if memory_kib >= 1024.0 {
+        // Same as before but with MB
+        // 1 MB = 1024 KiB
+        let memory_mb = round_to_two_decimal(memory_kib / 1024.0);
+        format!("{} MB", memory_mb)
+    } else {
+        // Else, just return it in KiB
+        format!("{} KiB", memory_kib)
     }
-    String::from("Null")
+}
+
+/// Gets the percentage as a rounded value considering a part and a total
+pub fn get_percentage_from_part(part: f64, total: f64) -> u64 {
+    (part / total * 100.0).floor() as u64
+}
+
+/// Rounds an f64 variable to two decimal points
+pub fn round_to_two_decimal(input: f64) -> f64 {
+    (input * 100.0).floor() / 100.0
 }

@@ -1,16 +1,15 @@
-use colored::*;
-use std::path::Path;
-
-use crate::common::{get_trimmed, get_value_from_file};
 use crate::platform::{self, get_power_draw};
+use crate::sysinfo::*;
+use colored::*;
+use sysinfo::System;
 
 // TODO: Most get_trimmed or get_value_from_file functions statically refer to linux directories, create functions in platform
 //       for this
 
-fn color_percentage(percentage: f64) -> ColoredString {
-    if percentage < 40.0 {
+fn color_percentage(percentage: u64) -> ColoredString {
+    if percentage < 40 {
         (percentage.to_string() + "%").green()
-    } else if (40.0..80.0).contains(&percentage) {
+    } else if (40..80).contains(&percentage) {
         (percentage.to_string() + "%").yellow()
     } else {
         (percentage.to_string() + "%").red()
@@ -31,31 +30,23 @@ pub fn display_os() {
     println!(
         "{} {} ({})",
         "OS:".bold(),
-        get_value_from_file(Path::new("/etc/os-release"), "PRETTY_NAME", "="),
+        get_os_name(),
         std::env::consts::ARCH // CPU Architecture the program was compiled for
     );
 }
 
 pub fn display_kernel() {
-    println!(
-        "{} Linux {}", // FIXME: Only displays linux statically
-        "Kernel:".bold(),
-        get_trimmed(Path::new("/proc/sys/kernel/osrelease"))
-    );
+    println!("{} {}", "Kernel:".bold(), platform::format_kernel_version());
 }
 
-pub fn display_cpu() {
-    println!(
-        "{} {}",
-        "CPU:".bold(),
-        get_value_from_file(Path::new("/proc/cpuinfo"), "model name", ":")
-    );
+pub fn display_cpu(sys: &System) {
+    println!("{} {}", "CPU:".bold(), get_cpu_name(sys));
 }
 
-pub fn display_ram_usage() {
-    let (total, used, percentage) = platform::get_ram_usage();
+pub fn display_ram_usage(sys: &System) {
+    let (total, used, percentage) = get_ram_usage(sys);
     println!(
-        "{} {} / {} ({} used)",
+        "{} {} / {} ({})",
         "RAM:".bold(),
         used,
         total,
@@ -63,10 +54,10 @@ pub fn display_ram_usage() {
     );
 }
 
-pub fn display_swap_usage(){
-    let (total, used, percentage) = platform::get_swap_usage();
+pub fn display_swap_usage(sys: &System) {
+    let (total, used, percentage) = get_swap_usage(sys);
     println!(
-        "{} {} / {} ({} used)",
+        "{} {} / {} ({})",
         "Swap:".bold(),
         used,
         total,
@@ -75,7 +66,7 @@ pub fn display_swap_usage(){
 }
 
 pub fn display_uptime() {
-    println!("{} {}", "Uptime:".bold(), platform::get_uptime());
+    println!("{} {}", "Uptime:".bold(), get_uptime());
 }
 
 pub fn display_battery() {
