@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize}; // This transforms toml files into structs and viceversa
 use std::path::PathBuf;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Default)]
 pub struct Config {
     pub display: DisplayConfig,
 }
@@ -33,14 +33,6 @@ impl Default for DisplayConfig {
             battery: true,
             disk: true,
             power_draw: false,
-        }
-    }
-}
-
-impl Default for Config {
-    fn default() -> Self {
-        Self {
-            display: DisplayConfig::default(),
         }
     }
 }

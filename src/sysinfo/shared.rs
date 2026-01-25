@@ -3,7 +3,7 @@ use nix::sys::statvfs::*;
 
 use sysinfo::*;
 
-// Creates a System variable once and refreshes all the needed features
+/// Creates a System variable once and refreshes all the needed features
 pub fn create_system() -> System {
     let mut sys = System::new();
     sys.refresh_memory();
@@ -11,26 +11,28 @@ pub fn create_system() -> System {
     sys
 }
 
+/// Gets RAM usage values and returns them as a formatted String alongside the usage percentage as unsigned int
 pub fn get_ram_usage(sys: &System) -> (String, String, u64) {
     let total_kib = (sys.total_memory() / 1024) as f64;
     let used_kib = (sys.used_memory() / 1024) as f64;
-    let percentage = get_percentage_from_part(used_kib, total_kib);
+    let percentage = get_percentage_from_part(used_kib, total_kib).unwrap_or(0);
 
     (
-        convert_to_bytes(total_kib),
-        convert_to_bytes(used_kib),
+        convert_to_bytes(total_kib).unwrap_or(String::from("0 KiB")),
+        convert_to_bytes(used_kib).unwrap_or(String::from("0 KiB")),
         percentage,
     )
 }
 
+/// Gets swap usage values and returns them as a formatted String alongside the usage percentage as unsigned int
 pub fn get_swap_usage(sys: &System) -> (String, String, u64) {
     let total_kib = (sys.total_swap() / 1024) as f64;
     let used_kib = (sys.used_swap() / 1024) as f64;
-    let percentage = get_percentage_from_part(used_kib, total_kib);
+    let percentage = get_percentage_from_part(used_kib, total_kib).unwrap_or(0);
 
     (
-        convert_to_bytes(total_kib),
-        convert_to_bytes(used_kib),
+        convert_to_bytes(total_kib).unwrap_or(String::from("0 KiB")),
+        convert_to_bytes(used_kib).unwrap_or(String::from("0 KiB")),
         percentage,
     )
 }
@@ -44,9 +46,9 @@ pub fn get_uptime() -> String {
     let seconds = uptime_seconds % 60;
 
     if hours < 1 {
-        return format!("{:02}m {:02}s", minutes, seconds);
+        format!("{:02}m {:02}s", minutes, seconds)
     } else {
-        return format!("{:02}h {:02}m {:02}s", hours, minutes, seconds);
+        format!("{:02}h {:02}m {:02}s", hours, minutes, seconds)
     }
 }
 
@@ -61,19 +63,22 @@ pub fn get_directory_usage(directory: &str) -> (u64, u64, u64) {
     let free = stats.blocks_available() as u64 * block_size;
     let used = total - free;
 
-    let percentage = get_percentage_from_part(used as f64, total as f64);
+    let percentage = get_percentage_from_part(used as f64, total as f64).unwrap_or(0);
 
     (total / 1_000_000_000, used / 1_000_000_000, percentage)
 }
 
+/// Gets os name on any given system
 pub fn get_os_name() -> String {
     System::name().unwrap_or_else(|| String::from("Unknown"))
 }
 
+/// Gets kernel version on any given system
 pub fn get_kernel_version() -> String {
     System::kernel_version().unwrap_or_else(|| String::from("Unknown"))
 }
 
+/// Gets cpu name on any given system
 pub fn get_cpu_name(sys: &System) -> String {
     sys.cpus()
         .first()

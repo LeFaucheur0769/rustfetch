@@ -54,7 +54,7 @@ pub fn display_ram_usage(sys: &System) {
 
 pub fn display_swap_usage(sys: &System) {
     let (total, used, percentage) = get_swap_usage(sys);
-    if extract_numeric_value(&total) == 0.0 {
+    if extract_numeric_value(&total).is_ok_and(|v| v == 0.0) {
         println!("{} Disabled", "Swap:".bold())
     }
     println!(
