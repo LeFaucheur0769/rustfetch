@@ -16,7 +16,7 @@ Thanks for your interest in contributing! Everyone is welcome and encouraged to 
 
 ### Style
 - **Follow the existing code style!** Consistency makes a codebase easy on the eyes and on the mind.
-- Run `cargo fmt` before committing
+- Run `cargo +nightly fmt` before committing
 
 ### Performance Matters
 This is a system info tool that should be fast and lightweight. Keep these in mind:
