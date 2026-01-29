@@ -1,21 +1,38 @@
+pub mod cli;
 pub mod common;
 pub mod config;
 pub mod platform;
 pub mod sysinfo;
 
+use clap::Parser;
+use cli::Cli;
 use config::load_config;
 
+use crate::config::load_all_config;
+
 // TODO:
-// Error Detection in case function returns "Null"
 // Add ASCII art
-// Add CPU, GPU: frequency, temps, usage
+// Add CPU, GPU: temps, usage
+
+// NOTICE:
+// When adding a new feature that probably needs to be false by default in config.rs, instead of
+// manually setting everything to true, you can do the following commands:
+// cargo build --version
+// ./target/release/rustfetch --all
 
 fn main() {
-    let config = load_config();
+    let cli = Cli::parse();
 
     // We are creating a System variable which we are sharing across all sysinfo functions to
     // have not have overhead creating that variable inside every function
     let sys = sysinfo::create_system();
+
+    // If the --all flag is active the config variable will be set to the load_all_config function
+    let config = if cli.all {
+        load_all_config()
+    } else {
+        load_config()
+    };
 
     if config.display.os {
         common::display_os();

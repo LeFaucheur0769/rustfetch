@@ -2,11 +2,19 @@
 //! To regenerate the config file and test new setups just run
 //! rm "YOUR_OS_FILE_PATH" if on unix-like system
 
-// TODO: On command line, add --reset-config to make test easier
+// STANDARD PATHS:
+// Linux:  ~/.config/rustfetch/config.toml
+// macOS: ~/Library/Application Support/rustfetch/config.toml
+
+// TODO: On command line, add --reset-config and --all-on to make test easier
 
 use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize}; // This transforms toml files into structs and viceversa
+
+trait All {
+    fn set_all() -> Self;
+}
 
 #[derive(Debug, Deserialize, Serialize, Default)]
 pub struct Config {
@@ -46,10 +54,25 @@ impl Default for DisplayConfig {
     }
 }
 
+impl All for DisplayConfig {
+    /// Set all values to true
+    fn set_all() -> Self {
+        Self {
+            os: true,
+            kernel: true,
+            cpu: true,
+            ram: true,
+            swap: true,
+            uptime: true,
+            battery: true,
+            disk: true,
+            power_draw: true,
+            cpu_frequency: true,
+        }
+    }
+}
+
 pub fn load_config() -> Config {
-    // On Linux:  ~/.config/rustfetch/config.toml
-    // On Windows: C:\Users\YourName\AppData\Roaming\rustfetch\config.toml
-    // On macOS: ~/Library/Application Support/rustfetch/config.toml
     let config_path = dirs::config_dir()
         .map(|p| p.join("rustfetch/config.toml")) // Add file path
         .unwrap_or_else(|| PathBuf::from("rustfetch.toml")); // Fallback = current directory
@@ -81,5 +104,11 @@ pub fn load_config() -> Config {
         }
 
         default_config
+    }
+}
+
+pub fn load_all_config() -> Config {
+    Config {
+        display: DisplayConfig::set_all(),
     }
 }
