@@ -1,4 +1,5 @@
 edition = "2021"
+unstable_features = true
 
 # Line length
 max_width = 100

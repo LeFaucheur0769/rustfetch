@@ -1,8 +1,11 @@
-use crate::common::extract_numeric_value;
-use crate::platform::{self, get_power_draw};
-use crate::sysinfo::*;
 use colored::*;
 use sysinfo::System;
+
+use crate::{
+    common::extract_numeric_value,
+    platform::{self, get_power_draw},
+    sysinfo::*,
+};
 
 fn color_percentage(percentage: u64) -> ColoredString {
     if percentage < 40 {
@@ -43,13 +46,7 @@ pub fn display_cpu(sys: &System) {
 
 pub fn display_ram_usage(sys: &System) {
     let (total, used, percentage) = get_ram_usage(sys);
-    println!(
-        "{} {} / {} ({})",
-        "RAM:".bold(),
-        used,
-        total,
-        color_percentage(percentage)
-    );
+    println!("{} {} / {} ({})", "RAM:".bold(), used, total, color_percentage(percentage));
 }
 
 pub fn display_swap_usage(sys: &System) {
@@ -57,13 +54,7 @@ pub fn display_swap_usage(sys: &System) {
     if extract_numeric_value(&total).is_ok_and(|v| v == 0.0) {
         println!("{} Disabled", "Swap:".bold())
     } else {
-        println!(
-            "{} {} / {} ({})",
-            "Swap:".bold(),
-            used,
-            total,
-            color_percentage(percentage)
-        );
+        println!("{} {} / {} ({})", "Swap:".bold(), used, total, color_percentage(percentage));
     }
 }
 

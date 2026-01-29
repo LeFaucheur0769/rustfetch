@@ -1,7 +1,6 @@
 //! Common functions shared across all platforms
 
-use std::fs;
-use std::path::Path;
+use std::{fs, path::Path};
 
 const KIB_IN_MB: f64 = 1024.0;
 const KIB_IN_GB: f64 = 1024.0 * 1024.0; // We are declaring it as f64 as we'll use it as a float in this file to minimize casting

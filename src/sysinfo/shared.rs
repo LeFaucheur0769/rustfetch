@@ -1,7 +1,7 @@
-use crate::common::*;
 use nix::sys::statvfs::*;
-
 use sysinfo::*;
+
+use crate::common::*;
 
 const BYTES_TO_GB: u64 = 1_000_000_000;
 const KIB_TO_MB: u64 = 1024;
@@ -14,7 +14,8 @@ pub fn create_system() -> System {
     sys
 }
 
-/// Gets RAM usage values and returns them as a formatted String alongside the usage percentage as unsigned int
+/// Gets RAM usage values and returns them as a formatted String alongside the usage percentage as
+/// unsigned int
 pub fn get_ram_usage(sys: &System) -> (String, String, u64) {
     let total_kib = (sys.total_memory() / KIB_TO_MB) as f64;
     let used_kib = (sys.used_memory() / KIB_TO_MB) as f64;
@@ -27,7 +28,8 @@ pub fn get_ram_usage(sys: &System) -> (String, String, u64) {
     )
 }
 
-/// Gets swap usage values and returns them as a formatted String alongside the usage percentage as unsigned int
+/// Gets swap usage values and returns them as a formatted String alongside the usage percentage as
+/// unsigned int
 pub fn get_swap_usage(sys: &System) -> (String, String, u64) {
     let total_kib = (sys.total_swap() / KIB_TO_MB) as f64;
     let used_kib = (sys.used_swap() / KIB_TO_MB) as f64;
@@ -65,7 +67,7 @@ pub fn get_directory_usage(directory: &str) -> (u64, u64, u64) {
                 directory, e
             );
             return (0, 0, 0); // Return zeros if unable to get disk stats
-        }
+        },
     };
 
     // Cast these to u64 for closs platform compatibility

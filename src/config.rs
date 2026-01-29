@@ -1,5 +1,6 @@
-use serde::{Deserialize, Serialize}; // This transforms toml files into structs and viceversa
 use std::path::PathBuf;
+
+use serde::{Deserialize, Serialize}; // This transforms toml files into structs and viceversa
 
 #[derive(Debug, Deserialize, Serialize, Default)]
 pub struct Config {
@@ -65,10 +66,7 @@ pub fn load_config() -> Config {
             toml::to_string_pretty(&default_config).expect("Failed to serialize default config");
 
         if let Err(e) = std::fs::write(&config_path, toml_string) {
-            eprintln!(
-                "Warning: Could not create config file at {:?}: {}",
-                config_path, e
-            );
+            eprintln!("Warning: Could not create config file at {:?}: {}", config_path, e);
             eprintln!("Using default configuration in memory");
         } else {
             println!("Created default config file at:  {:?}", config_path);

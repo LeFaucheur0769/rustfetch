@@ -1,16 +1,14 @@
 //! Test all functions within src/utils
 
 use core::f64;
+
 use rustfetch::common::*;
 
 // extract_numeric_value tests
 #[test]
 fn test_no_numeric_value() {
     let result = extract_numeric_value("");
-    assert_eq!(
-        result,
-        Err("No numeric value found in the input".to_string())
-    );
+    assert_eq!(result, Err("No numeric value found in the input".to_string()));
 
     let result = extract_numeric_value("abcd");
     assert!(result.is_err());
@@ -49,8 +47,8 @@ fn test_round_to_two_decimals_correct_input() {
 
 #[test]
 fn test_round_to_two_decimals_edge_cases() {
-    // With our current implementation of the function there should be no reason for an input to be negative,
-    // but it's better to test it sooner rather than it crashing later
+    // With our current implementation of the function there should be no reason for an input to be
+    // negative, but it's better to test it sooner rather than it crashing later
     let result = round_to_two_decimal(-25.11238);
     assert_eq!(result, -25.11);
 

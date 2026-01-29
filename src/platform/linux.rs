@@ -1,6 +1,6 @@
-use crate::common::*;
-use crate::sysinfo::*;
 use std::path::Path;
+
+use crate::{common::*, sysinfo::*};
 
 const BATTERY_CAPACITY_DIR: &str = "sys/class/power_supply/BAT0/capacity";
 const BATTERY_STATUS_DIR: &str = "sys/class/power_supply/BAT0/capacity";

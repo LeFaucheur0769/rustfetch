@@ -5,12 +5,10 @@ pub mod sysinfo;
 
 use config::load_config;
 
-/*
-    TODO:
-    Error Detection in case function returns "Null"
-    Add ASCII art
-    Add CPU, GPU: frequency, temps, usage
-*/
+// TODO:
+// Error Detection in case function returns "Null"
+// Add ASCII art
+// Add CPU, GPU: frequency, temps, usage
 
 fn main() {
     let config = load_config();
