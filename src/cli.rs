@@ -1,9 +1,11 @@
+//! This file handles all CLI flags such as -a or --all to display all options.
+//! It also manages the --help text with custom comments.
+
 use clap::Parser;
 
-/// CLI options for rustfetch
 #[derive(Parser, Debug)]
 #[command(name = "rustfetch", version)]
 pub struct Cli {
-    #[arg(short, long)]
+    #[arg(short, long, help = "Display all info regardless of config")]
     pub all: bool,
 }
