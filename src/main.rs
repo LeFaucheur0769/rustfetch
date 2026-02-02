@@ -4,14 +4,14 @@ pub mod config;
 pub mod platform;
 pub mod sysinfo;
 
+use std::io::Write;
+
 use clap::Parser;
 use cli::Cli;
 use colored::*;
-use std::io::Write;
-
-use crate::config::load_all_config;
 use config::load_config;
 
+use crate::{config::load_all_config, platform::colorize_logo_line};
 
 // TODO:
 // Add ASCII art
@@ -26,9 +26,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         load_config()
     };
 
-    let logo_lines = platform::get_logo_lines();
+    let distro_id = platform::get_distro_id();
+    let logo_lines = platform::get_logo_lines(&distro_id);
 
-    // Here we're creating an empty vector that'll hold our printing information in different indexes
+    // Here we're creating an empty vector that'll hold our printing information in different
+    // indexes
     let mut info_lines: Vec<String> = Vec::new();
 
     if config.display.os {
@@ -79,7 +81,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for i in 0..max_lines {
         if i < logo_lines.len() {
             // FIXME: displays only blue
-            write!(stdout, "{}", logo_lines[i].blue())?;
+            write!(stdout, "{}", colorize_logo_line(&distro_id, &logo_lines[i]))?;
             // TODO: Add a command line argument to increase padding (padding += cli.arg)
             let padding = logo_column_width.saturating_sub(logo_lines[i].len());
             write!(stdout, "{:width$}", "", width = padding)?;

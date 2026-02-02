@@ -1,5 +1,5 @@
-use std::fs;
-use std::path::Path;
+use colored::*;
+use std::{fs, path::Path};
 
 use crate::{common::*, sysinfo::*};
 
@@ -48,12 +48,33 @@ pub fn format_kernel_version() -> String {
     format!("Linux {}", get_kernel_version())
 }
 
-pub fn get_logo_lines() -> Vec<String> {
+pub fn get_logo_lines(distro_id: &str) -> Vec<String> {
     // TODO: This should be a path.join but fs::read_to_string hates Pathbuf
-    let ascii_art_path = format!("ascii/{}.txt", get_distro_id());
+    let ascii_art_path = format!("ascii/{}.txt", distro_id);
 
     fs::read_to_string(&ascii_art_path)
         .ok()
         .map(|content| content.lines().map(|l| l.to_string()).collect())
         .unwrap_or_default()
+}
+
+/// Getting a reference to an element of the vector of strings we're printing and matching it with
+/// the distro id, we get return its colorized version.
+/// Example: if distro_id = ubuntu, then we return line.orange()
+pub fn colorize_logo_line(distro_id: &str, line: &str) -> ColoredString {
+    match distro_id {
+        "arch" => line.truecolor(23, 147, 209),
+        "ubuntu" => line.truecolor(255, 156, 0), // Orange
+        "cachyos" => line.truecolor(0, 184, 148),
+        "fedora" => line.truecolor(11, 87, 164),
+        "garuda" => line.truecolor(138, 43, 226),
+        "gentoo" => line.truecolor(84, 73, 149),
+        "endeavouros" => line.truecolor(122, 58, 237),
+        "kali" => line.truecolor(38, 139, 210),
+        "linuxmint" | "manjaro" => line.green(),
+        "debian" => line.red(),
+        "alpine" => line.cyan(),
+        // if the id is in this list default to white
+        _ => line.white(),
+    }
 }
