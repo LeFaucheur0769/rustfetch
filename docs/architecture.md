@@ -35,8 +35,7 @@ Entry point for the program, **handles showing or not showing modules** based on
 -  If the "--all" or "-a" flag is given, **skips config file parsing** entirely to enable all modules (This does not skip unsupported [platform specific modules](#platform)).
 <br>Else, **gets config options** from [config.rs](#configrs) and shows them based on their boolean value.
 - Gets the distro id from the dedicated function inside the **platform** crate
-- Runs [display functions](#displayrs) and **passes a reference to the System variable** it created if necessary, this is used as it **significantly saves computing time** by just creating it once and updating it based on what module is being ran.
-<br> The output of the display functions is added to the **info_lines** vector
+- Creates a **String vector** and adds the return values of the [display functions](#displayrs) to it if the config boolean for it is true and if the function returns Some(), if it returns None or the config for it is false it **just skips it**.
 - Prints the info_lines vector alongside the logo's lines and **adds padding** to make all the lines be horizontally aligned. As the line get printed, they are colored according to the distro_id
 
 ## config.rs
