@@ -25,6 +25,7 @@ cargo install --path .
 Here are some useful flags you can use:
 - ```rustfetch --help``` shows all commands and descriptions
 - ```rustfetch --all``` enables all config options, useful to **try features out**
+- ```rustfetch --padding=x``` adds padding between the ascii logo and the system information, replace x with your value (0-255)
 
 ## Customization
 Rustfetch relies on **TOML files** to parse the configuration, which makes them inherently **user-friendly**.

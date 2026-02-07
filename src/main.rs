@@ -21,7 +21,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let config = if cli.all {
         load_all_config()
     } else {
-        load_config()
+        load_config(&cli)
     };
     let sys = sysinfo::create_system(&config);
 
@@ -53,14 +53,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // We get the maximum length from the logo using .max()
     let logo_column_width = logo_lines.iter().map(|l| l.len()).max().unwrap_or(0);
 
-    for i in 0 .. max_lines {
+    for i in 0..max_lines {
         if i < logo_lines.len() {
             write!(stdout, "{}", colorize_logo_line(&distro_id, &logo_lines[i]))?;
             // TODO: Add a command line argument to increase padding (padding += cli.arg)
-            let padding = logo_column_width.saturating_sub(logo_lines[i].len());
+            let padding =
+                logo_column_width.saturating_sub(logo_lines[i].len()) + cli.padding as usize;
             write!(stdout, "{:width$}", "", width = padding)?;
         } else {
-            write!(stdout, "{:width$}", "", width = logo_column_width)?;
+            let padding = logo_column_width.saturating_sub(logo_lines[logo_lines.len() - 1].len())
+                + cli.padding as usize;
+            write!(stdout, "{:width$}", "", width = (logo_column_width + padding))?;
         }
 
         if i < info_lines.len() {

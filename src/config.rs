@@ -4,7 +4,9 @@
 
 use std::path::PathBuf;
 
-use serde::{Deserialize, Serialize}; // This transforms toml files into structs and viceversa
+use serde::{Deserialize, Serialize};
+
+use crate::cli::Cli; // This transforms toml files into structs and viceversa
 
 trait All {
     fn set_all() -> Self;
@@ -86,6 +88,10 @@ uptime = true
 cpu = true
     cpu_frequency = false
 
+# GPU INFO
+# --------
+gpu = true
+
 # MEMORY INFO
 # -----------
 # Display RAM usage
@@ -110,10 +116,34 @@ power_draw = false
     .to_string()
 }
 
-pub fn load_config() -> Config {
+fn create_config_file(config_path: &PathBuf) -> Config {
+    let default_config = Config::default();
+
+    // If parent directory does not exist, create it
+    if let Some(parent) = config_path.parent() {
+        let _ = std::fs::create_dir_all(parent);
+    }
+
+    let toml_string = get_config_template();
+
+    if let Err(e) = std::fs::write(config_path, toml_string) {
+        eprintln!("Warning: Could not create config file at {:?}: {}", config_path, e);
+        eprintln!("Using default configuration in memory");
+    } else {
+        println!("Created default config file at:  {:?}", config_path);
+    }
+
+    default_config
+}
+
+pub fn load_config(cli: &Cli) -> Config {
     let config_path = dirs::config_dir()
         .map(|p| p.join("rustfetch/config.toml")) // Add file path
         .unwrap_or_else(|| PathBuf::from("rustfetch.toml")); // Fallback = current directory
+
+    if cli.reset_config {
+        return create_config_file(&config_path);
+    }
 
     if let Ok(content) = std::fs::read_to_string(&config_path) {
         // If parsing fails, use defaults instead
@@ -123,24 +153,7 @@ pub fn load_config() -> Config {
             Config::default()
         })
     } else {
-        // If file doesn't exist, create it with defaults
-        let default_config = Config::default();
-
-        // If parent directory does not exist, create it
-        if let Some(parent) = config_path.parent() {
-            let _ = std::fs::create_dir_all(parent);
-        }
-
-        let toml_string = get_config_template();
-
-        if let Err(e) = std::fs::write(&config_path, toml_string) {
-            eprintln!("Warning: Could not create config file at {:?}: {}", config_path, e);
-            eprintln!("Using default configuration in memory");
-        } else {
-            println!("Created default config file at:  {:?}", config_path);
-        }
-
-        default_config
+        create_config_file(&config_path)
     }
 }
 
