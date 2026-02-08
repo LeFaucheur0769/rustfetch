@@ -4,6 +4,7 @@ Welcome to the main rustfetch documentation page, find what you need here:
 ## For Users
 - [Main Page](../README.md) - Everything you need to know about rustfetch
 - [Guide to Installation](guide_to_installation.md) - Detailed installation guide
+- [Flags guide](flags.md) - How to correctly use every flag and achieve rustfetch's full potential
 
 ## For Contributors
 - [How to contribute](../CONTRIBUTING.md) - Generic **contributing rules and instructions** on how to start contributing

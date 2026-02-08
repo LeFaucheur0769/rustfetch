@@ -23,9 +23,12 @@ cargo install --path .
 **You can run the CLI with the default config by typing ```rustfetch```**
 
 Here are some useful flags you can use:
-- ```rustfetch --help``` shows all commands and descriptions
-- ```rustfetch --all``` enables all config options, useful to **try features out**
-- ```rustfetch --padding=x``` adds padding between the ascii logo and the system information, replace x with your value (0-255)
+- ```--help / -h``` shows all commands and descriptions
+- ```--all / -a``` enables all config options, useful to **try features out**
+- ```--padding / -p x``` adds padding between the ascii logo and the system information, replace x with your value (0-255)
+- ```--config-file / -c PATH_TO_FILE``` uses a different config file, if the file does not exist it'll be created with defaults
+
+> This is a selected list of the most used flags, to learn about all the flags visit our [flags guide](docs/flags.md).
 
 ## Customization
 Rustfetch relies on **TOML files** to parse the configuration, which makes them inherently **user-friendly**.
