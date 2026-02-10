@@ -3,22 +3,15 @@
 
 Rustfetch is a CLI tool designed to **fetch system information** in the **fastest** and **safest** way possible while still keeping it visually appealing, inspired by [neofetch](https://github.com/dylanaraps/neofetch) and [fastfetch](https://github.com/fastfetch-cli/fastfetch).
 
-<table cellpadding="0" cellspacing="0">
-	<tr>
-		<td width="45%" align="left">
-			<img src="docs/images/arch_0.2.avif" width="100%">
-		</td>
-		<td width="10%" align="center">&nbsp;</td>
-		<td width="45%" align="right">
-			<img src="docs/images/ubuntu_0.2.avif" width="100%">
-		</td>
-	</tr>
-	<tr>
-		<td colspan="3" align="center">
-			<img src="docs/images/macos_0.2.avif" width="50%">
-		</td>
-	</tr>
-</table>
+<!-- I think the following image handling is not very markdown idiomatic and there must be a way to do this in a better way, i've tried with an HTML table but GitHub markdown shows huge grey bands in empty table slots, any other approached would be appreaciated -->
+<p align="center">
+	<img src="docs/images/arch_0.2.avif" width="48%">
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<img src="docs/images/ubuntu_0.2.avif" width="42%">
+</p>
+<p align="center">
+	<img src="docs/images/macos_0.2.avif" width="50%">
+</p>
 
 <sub>Tested on: macOS (Apple Silicon), Ubuntu 22.04 LTS, Arch Linux (x86_64). rustc 1.93.0</sub>
 
