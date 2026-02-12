@@ -2,8 +2,9 @@
 //! To regenerate the config file and test new setups just run
 //! cargo run -- --reset-config
 
-use serde::{Deserialize, Serialize}; // This transforms toml files into structs and viceversa
 use std::path::PathBuf;
+
+use serde::{Deserialize, Serialize}; // This transforms toml files into structs and viceversa
 
 use crate::cli::Cli;
 
@@ -75,7 +76,7 @@ cpu = true
 gpu = true
 screen = true
     resolution = true
-    refresh_rate: true
+    refresh_rate = true
 
 # MEMORY INFO
 # -----------
