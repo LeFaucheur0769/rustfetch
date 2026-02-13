@@ -16,6 +16,7 @@ pub struct Config {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct DisplayConfig {
     // The names MUST match the names inside config.toml
+    pub identifier: bool,
     pub os: bool,
     pub kernel: bool,
     pub uptime: bool,
@@ -36,6 +37,7 @@ impl Default for DisplayConfig {
     fn default() -> Self {
         Self {
             // If the config file is missing or corrupted, default to this
+            identifier: true,
             os: true,
             kernel: true,
             uptime: true,
@@ -58,6 +60,8 @@ fn get_config_template() -> String {
     r#"# Rustfetch config file
 
 [display]
+# Display username and host name
+identifier = true
 # Display the OS name
 os = true
 # Display the kernel version
@@ -153,6 +157,7 @@ pub fn load_config(cli: &Cli) -> Config {
 pub fn load_all_config() -> Config {
     Config {
         display: DisplayConfig {
+            identifier: true,
             os: true,
             kernel: true,
             uptime: true,

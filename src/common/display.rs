@@ -11,7 +11,7 @@ use crate::{
 fn color_percentage(percentage: u64) -> ColoredString {
     if percentage < 40 {
         format!("{}%", percentage).green()
-    } else if (40 .. 80).contains(&percentage) {
+    } else if (40..80).contains(&percentage) {
         format!("{}%", percentage).yellow()
     } else {
         format!("{}%", percentage).red()
@@ -21,7 +21,7 @@ fn color_percentage(percentage: u64) -> ColoredString {
 fn color_percentage_inverse(percentage: f64) -> ColoredString {
     if percentage < 30.0 {
         format!("{}%", percentage).red()
-    } else if (30.0 .. 70.0).contains(&percentage) {
+    } else if (30.0..70.0).contains(&percentage) {
         format!("{}%", percentage).yellow()
     } else {
         format!("{}%", percentage).green()
@@ -139,4 +139,21 @@ pub fn display_screen(config: &Config) -> Option<String> {
     }
 
     Some(format!("{} {} {}", "Screen:".bold(), resolution, refresh_rate))
+}
+
+pub fn display_identifier() -> Vec<String> {
+    let mut host_name = String::from("");
+    if let Some(host) = get_host_name() {
+        host_name = host;
+    }
+    let username = get_username();
+
+    let mut identifier = format!("{}@{}", host_name, username);
+    let underline = "-".repeat(identifier.chars().count());
+
+    // this may add overhead and i will try to find a better way,
+    // though bolding everything up messes with the underline
+    identifier = format!("{}", identifier.bold());
+
+    vec![identifier, underline]
 }

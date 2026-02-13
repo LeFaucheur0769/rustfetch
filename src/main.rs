@@ -27,24 +27,32 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let distro_id = platform::get_distro_id();
     let logo_lines = sysinfo::get_logo_lines(&distro_id);
 
-    let info_lines: Vec<String> = vec![
-        config.display.os.then(common::display_os),
-        config.display.kernel.then(common::display_kernel),
-        config.display.cpu.then(|| common::display_cpu(&sys, &config)),
-        config.display.gpu.then(common::display_gpu_info).flatten(),
-        config.display.screen.then(|| common::display_screen(&config)).flatten(),
-        config.display.ram.then(|| common::display_ram_usage(&sys)),
-        config.display.swap.then(|| common::display_swap_usage(&sys)),
-        config.display.uptime.then(common::display_uptime),
-        #[cfg(target_os = "linux")]
-        config.display.battery.then(common::display_battery).flatten(),
-        #[cfg(target_os = "linux")]
-        config.display.power_draw.then(common::display_power_draw).flatten(),
-        config.display.disk.then(common::display_disk_usage),
-    ]
-    .into_iter()
-    .flatten()
-    .collect();
+    let info_lines: Vec<String> = config
+        .display
+        .identifier
+        .then(common::display_identifier)
+        .into_iter()
+        .flatten()
+        .chain(
+            vec![
+                config.display.os.then(common::display_os),
+                config.display.kernel.then(common::display_kernel),
+                config.display.cpu.then(|| common::display_cpu(&sys, &config)),
+                config.display.gpu.then(common::display_gpu_info).flatten(),
+                config.display.screen.then(|| common::display_screen(&config)).flatten(),
+                config.display.ram.then(|| common::display_ram_usage(&sys)),
+                config.display.swap.then(|| common::display_swap_usage(&sys)),
+                config.display.uptime.then(common::display_uptime),
+                #[cfg(target_os = "linux")]
+                config.display.battery.then(common::display_battery).flatten(),
+                #[cfg(target_os = "linux")]
+                config.display.power_draw.then(common::display_power_draw).flatten(),
+                config.display.disk.then(common::display_disk_usage),
+            ]
+            .into_iter()
+            .flatten(),
+        )
+        .collect();
 
     let stdout = std::io::stdout();
     let mut handle = BufWriter::new(stdout.lock());
@@ -59,7 +67,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // We get the maximum length from the logo using .max()
         let logo_column_width = logo_lines.iter().map(|l| l.len()).max().unwrap_or(0);
 
-        for i in 0 .. max_lines {
+        for i in 0..max_lines {
             if i < logo_lines.len() {
                 write!(handle, "{}", colorize_logo_line(&distro_id, &logo_lines[i]))?;
                 let padding =
