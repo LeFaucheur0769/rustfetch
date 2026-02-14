@@ -70,7 +70,9 @@ pub fn colorize_logo_line(distro_id: &str, line: &str) -> ColoredString {
         "alpine" => line.cyan(),
         "popos" => line.truecolor(72, 149, 239),
         "opensuse" => line.truecolor(115, 186, 37),
-        // if the id is not in this list default to white
+        "nixos" => line.truecolor(125, 176, 221),
+        "zorin" => line.truecolor(17, 162, 236),
+        "elementary" => line.white(),
         _ => line.white(),
     }
 }
