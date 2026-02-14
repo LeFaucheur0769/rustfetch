@@ -21,7 +21,7 @@ You can **copy and paste** this command to use the install script:
 curl -fsSL https://raw.githubusercontent.com/lemuray/rustfetch/main/install.sh | bash
 ```
 
-Alternatively, you can build it from source:
+Alternatively, you can build the latest unstable version from source:
 ```bash
 cargo install --git https://github.com/lemuray/rustfetch.git
 ```
